@@ -60,5 +60,11 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <!-- Diálogo Recuperar & guardar partido-->
+    <string name="save_game"> do you want to save the game </string>
+    <string name="saving_game"> Game saving  </string>
+
+    <string name="get_game"> do you want to Get the game </string>
+    <string name="getting_game"> Geting saving  </string>
 
 </resources>

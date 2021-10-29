@@ -40,7 +40,8 @@ import es.upm.miw.bantumi.model.Partido;
 public class MainActivity extends AppCompatActivity {
 
     protected final String LOG_TAG = "MiW";
-    private static final String SAVE_GAME = "abcd.txt";
+    //Save game in file
+    protected   String SAVE_GAME = "savedGame.txt";
     JuegoBantumi juegoBantumi;
     BantumiViewModel bantumiVM;
     int numInicialSemillas;
@@ -198,50 +199,52 @@ public class MainActivity extends AppCompatActivity {
                 juegoBantumi.inicializar(JuegoBantumi.Turno.turnoJ1);
                 return true;
 
-            // @TODO!!! resto opciones
             case R.id.opcMejoresResultados:
                 Intent newIntent = new Intent(MainActivity.this, MejoresRes.class);
                 startActivity(newIntent);
                 return true;
 
             case R.id.opcGuardarPartida:
-                FileInputStream fileSaveGame = null;
-                try {
-                    fileSaveGame = openFileInput(SAVE_GAME);
-                    BufferedReader br = new BufferedReader(new InputStreamReader(fileSaveGame));
-                    if (br.readLine() != null) {
                         new AlertDialog.Builder(this)
-                                .setTitle("do you want to save the game ")
-                                .setMessage("saving the game ")
-                                .setPositiveButton(android.R.string.ok, (dialog, which) -> saveGame())
-                                .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
-                                    //Do nothing
+                                .setTitle(R.string.save_game)
+                                .setMessage(R.string.saving_game)
+                                .setPositiveButton(getString(R.string.txtDialogoFinalAfirmativo),
+                                        new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                saveGame();
+                                            }
+                                        }
+                                )
+                                .setNegativeButton(getString(R.string.txtDialogoFinalNegativo), new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //Do nothing
+                                    }
                                 })
                                 .show();
-                    } else {
-                        saveGame();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    if (fileSaveGame != null) {
-                        try {
-                            fileSaveGame.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
+
                 return true;
 
             case R.id.opcRecuperarPartida:
-                item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        getGame();
-                        return true;
-                    }
-                });
+                new AlertDialog.Builder(this)
+                        .setTitle(R.string.get_game)
+                        .setMessage(R.string.getting_game)
+                        .setPositiveButton(getString(R.string.txtDialogoFinalAfirmativo),
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        getGame();
+                                    }
+                                }
+                        )
+                        .setNegativeButton(getString(R.string.txtDialogoFinalNegativo), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //Do nothing
+                            }
+                        })
+                        .show();
             default:
                 Snackbar.make(
                         findViewById(android.R.id.content),
