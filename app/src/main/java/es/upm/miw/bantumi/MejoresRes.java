@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,6 +23,7 @@ public class MejoresRes extends AppCompatActivity {
     AppDataBase dataBase ;
     RecyclerViewAdapter myAdapter;
     List<Partido> mData= new ArrayList<>();
+    AlertDialog.Builder builder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +32,7 @@ public class MejoresRes extends AppCompatActivity {
         dataBase = AppDataBase.getAppDatabase(this);
         mData = dataBase.pilotDao().getAll();
 
+        builder = new AlertDialog.Builder(this);
 
         myrv = findViewById(R.id.rv);
         myAdapter = new RecyclerViewAdapter(this,mData) ;
@@ -53,10 +57,31 @@ public class MejoresRes extends AppCompatActivity {
 
         if (id == R.id.deleteItem) {
             // do something here
-            dataBase.pilotDao().deleteAll();
-            mData.clear();
-            myAdapter.notifyDataSetChanged();
-
+            builder
+                    .setTitle(R.string.deletLista)
+                    .setMessage(R.string.listadelete)
+                    .setPositiveButton(
+                            getString(R.string.txtDialogoFinalAfirmativo),
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dataBase.pilotDao().deleteAll();
+                                    mData.clear();
+                                    myAdapter.notifyDataSetChanged();
+                                }
+                            }
+                    )
+                    .setNegativeButton(
+                            getString(R.string.txtDialogoFinalNegativo),
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //Nothing
+                                }
+                            }
+                    );
+            AlertDialog AD = builder.create();
+            AD.show();
 
         }
         return super.onOptionsItemSelected(item);

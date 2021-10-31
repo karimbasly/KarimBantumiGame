@@ -52,19 +52,25 @@
     <string name="txtDialogoFinalAfirmativo">Sí</string>
     <string name="txtDialogoFinalNegativo">No</string>
     <string name="title_activity_mejores_resultados">MejoresResultados</string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
+    <!-- Sync Preferences
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+   <string name="attachment_summary_off">Only download attachments when manually requested</string>
+-->
+<!--reiniciar juego-->
 
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
-    <!-- Diálogo Recuperar & guardar partido-->
-    <string name="save_game"> do you want to save the game </string>
-    <string name="saving_game"> Game saving  </string>
+    <string name="ResetGameMessage">¿Quieres reiniciar el juego?</string>
+    <string name="save_game"> Guardar Partida </string>
+    <string name="saving_game"> ¿Quieres Guardar Partida? </string>
+<!--recuperar partida-->
+    <string name="get_game"> Recuperar Partida </string>
+    <string name="getting_game">¿Quieres Recuperar Partida?  </string>
+<!--eliminar los datos-->
+    <string name="deletLista"> Eliminar  </string>
+    <string name="listadelete">¿Quieres Eliminar todos los resultados?  </string>
+    <string name="emptyfile">No hay ninguna partida guardada</string>
 
-    <string name="get_game"> do you want to Get the game </string>
-    <string name="getting_game"> Geting saving  </string>
-
+    <string name="title_activity_bantumi_prefs">BantumiPrefs</string>
 </resources>

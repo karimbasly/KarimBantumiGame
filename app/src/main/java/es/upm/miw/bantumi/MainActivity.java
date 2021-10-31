@@ -1,9 +1,9 @@
 package es.upm.miw.bantumi;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.preference.PreferenceManager;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -49,7 +50,8 @@ public class MainActivity extends AppCompatActivity {
     TextView scoreJ2;
     TextView scoreJ1;
     private List<Partido> rowList = new ArrayList<Partido>();
-
+    private TextView textViewPlayer1;
+    private SharedPreferences sharedPref;
     //Database instance
     AppDataBase database;
 
@@ -60,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
         scoreJ2 = findViewById(R.id.casilla_13);
         scoreJ1 = findViewById(R.id.casilla_06);
         database = AppDataBase.getAppDatabase(this);
+        this.textViewPlayer1 = findViewById(R.id.tvPlayer1);
 
         //Init Builder
         builder = new AlertDialog.Builder(this);
@@ -76,10 +79,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //AlertDialog
-
                 builder
                         .setTitle(R.string.txtReiniciarPartida)
-                        .setMessage("Are you sure you want to reset the game ? ")
+                        .setMessage(R.string.ResetGameMessage)
                         .setPositiveButton(
                                 getString(R.string.txtDialogoFinalAfirmativo),
                                 new DialogInterface.OnClickListener() {
@@ -98,7 +100,6 @@ public class MainActivity extends AppCompatActivity {
                                     }
                                 }
                         );
-
                 AlertDialog AD = builder.create();
                 AD.show();
 
@@ -108,6 +109,16 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        this.sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        String name = this.sharedPref.getString("signature","");
+
+        if (name != null) {
+            this.textViewPlayer1.setText(name);
+        }
     }
 
     /**
@@ -184,9 +195,9 @@ public class MainActivity extends AppCompatActivity {
 
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-//            case R.id.opcAjustes: // @todo Preferencias
-//                startActivity(new Intent(this, BantumiPrefs.class));
-//                return true;
+            case R.id.opcAjustes:
+                startActivity(new Intent(this, BantumiPrefs.class));
+                return true;
             case R.id.opcAcercaDe:
                 new AlertDialog.Builder(this)
                         .setTitle(R.string.aboutTitle)
@@ -212,7 +223,12 @@ public class MainActivity extends AppCompatActivity {
                                         new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
+                                                try{
                                                 saveGame();
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                }
+
                                             }
                                         }
                                 )
@@ -227,6 +243,13 @@ public class MainActivity extends AppCompatActivity {
                 return true;
 
             case R.id.opcRecuperarPartida:
+                if(gameSaved()) {
+                    Snackbar.make(
+                            findViewById(android.R.id.content),
+                            getString(R.string.emptyfile),
+                            Snackbar.LENGTH_LONG
+                    ).show();
+                } else {
                 new AlertDialog.Builder(this)
                         .setTitle(R.string.get_game)
                         .setMessage(R.string.getting_game)
@@ -234,7 +257,11 @@ public class MainActivity extends AppCompatActivity {
                                 new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        getGame();
+                                       try {
+                                        getGame();}
+                                       catch (Exception e) {
+                                           e.printStackTrace();
+                                       }
                                     }
                                 }
                         )
@@ -244,7 +271,7 @@ public class MainActivity extends AppCompatActivity {
                                 //Do nothing
                             }
                         })
-                        .show();
+                        .show(); }
             default:
                 Snackbar.make(
                         findViewById(android.R.id.content),
@@ -255,16 +282,13 @@ public class MainActivity extends AppCompatActivity {
         return true;
 
     }
+
     private void saveGame() {
         FileOutputStream fileSaveGame = null;
-
         try {
             fileSaveGame = openFileOutput(SAVE_GAME, MODE_PRIVATE); // removes previously existing content
             fileSaveGame = openFileOutput(SAVE_GAME, MODE_APPEND); // appends content in the end
             fileSaveGame.write(juegoBantumi.serializa().getBytes());
-
-
-
             Toast.makeText(this, "Saved to " + getFilesDir() + "/" + SAVE_GAME,
                     Toast.LENGTH_LONG).show();
         } catch (FileNotFoundException fileNotFoundException) {
@@ -282,21 +306,24 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private boolean gameSaved() {
+        return  savedFile().size() != 14;
+    }
     private void getGame() {
+        List<String> gameState = savedFile();
+        juegoBantumi.deserializa(gameState);
+    }
+    private List<String> savedFile() {
         FileInputStream fileGame = null;
+        List<String> gameState = new ArrayList<>();
 
         try {
             fileGame = openFileInput(SAVE_GAME);
             BufferedReader brGetGame = new BufferedReader(new InputStreamReader(fileGame));
             String text;
-            List<String> gameState = new ArrayList<>();
             while ((text = brGetGame.readLine()) != null) {
                 gameState.add(text);
             }
-
-            juegoBantumi.deserializa(gameState);
-
-
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -308,6 +335,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+        return gameState ;
     }
 
 
@@ -357,23 +385,21 @@ public class MainActivity extends AppCompatActivity {
     private void finJuego() {
         String score1 = scoreJ1.getText().toString();
         String score2 = scoreJ2.getText().toString();
-        /*String texto = (juegoBantumi.getSemillas(6) > 6 * numInicialSemillas)
-                ? "Gana Jugador 1"
-                : "Gana Jugador 2";
+        this.sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        String name = this.sharedPref.getString("signature","");
+        Partido win = (juegoBantumi.getSemillas(6) > 6 * numInicialSemillas)
+                ? winner(name,score1)
+                : winner("Jugador 2",score2);
         Snackbar.make(
                 findViewById(android.R.id.content),
-                texto,
+                win.toString(),
                 Snackbar.LENGTH_LONG
-        )
-        .show();*/
-        Partido win = (juegoBantumi.getSemillas(6) > 6 * numInicialSemillas) ? winner("Jugador 1",score1) : winner("Jugador 2",score2);
+        ).show();
         //inserting partido to database
         database.pilotDao().insertOne(win);
 
         rowList = database.pilotDao().getAll();
         System.out.println(rowList);
-
-
         new FinalAlertDialog().show(getSupportFragmentManager(), "ALERT_DIALOG");
     }
 

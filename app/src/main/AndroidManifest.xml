@@ -11,6 +11,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Bantumi">
         <activity
+            android:name=".BantumiPrefs"
+            android:exported="true"
+            />
+        <activity
             android:name=".adapters.Partido_row"
             android:exported="false" />
         <activity
