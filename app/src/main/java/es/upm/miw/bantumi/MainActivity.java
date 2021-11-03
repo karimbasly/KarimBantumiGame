@@ -217,8 +217,8 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.opcGuardarPartida:
                         new AlertDialog.Builder(this)
-                                .setTitle(R.string.save_game)
-                                .setMessage(R.string.saving_game)
+                                .setTitle(R.string.saveGameTitle)
+                                .setMessage(R.string.saveGameQuestion)
                                 .setPositiveButton(getString(R.string.txtDialogoFinalAfirmativo),
                                         new DialogInterface.OnClickListener() {
                                             @Override
@@ -246,13 +246,13 @@ public class MainActivity extends AppCompatActivity {
                 if(gameSaved()) {
                     Snackbar.make(
                             findViewById(android.R.id.content),
-                            getString(R.string.emptyfile),
+                            getString(R.string.emptyFileMessage),
                             Snackbar.LENGTH_LONG
                     ).show();
                 } else {
                 new AlertDialog.Builder(this)
-                        .setTitle(R.string.get_game)
-                        .setMessage(R.string.getting_game)
+                        .setTitle(R.string.getGameTitle)
+                        .setMessage(R.string.getGameQuestion)
                         .setPositiveButton(getString(R.string.txtDialogoFinalAfirmativo),
                                 new DialogInterface.OnClickListener() {
                                     @Override
@@ -271,7 +271,7 @@ public class MainActivity extends AppCompatActivity {
                                 //Do nothing
                             }
                         })
-                        .show(); }
+                        .show();}
             default:
                 Snackbar.make(
                         findViewById(android.R.id.content),
@@ -307,7 +307,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean gameSaved() {
-        return  savedFile().size() != 14;
+        return  savedFile().size() != 15;
     }
     private void getGame() {
         List<String> gameState = savedFile();
@@ -392,19 +392,18 @@ public class MainActivity extends AppCompatActivity {
                 : winner("Jugador 2",score2);
         Snackbar.make(
                 findViewById(android.R.id.content),
-                win.toString(),
+                win.getJugador(),
                 Snackbar.LENGTH_LONG
         ).show();
         //inserting partido to database
         database.pilotDao().insertOne(win);
-
         rowList = database.pilotDao().getAll();
         System.out.println(rowList);
         new FinalAlertDialog().show(getSupportFragmentManager(), "ALERT_DIALOG");
     }
 
     private Partido winner(String the_winner,String score){
-        Date today =  Calendar.getInstance().getTime();;
+        Date today =  Calendar.getInstance().getTime();
         SimpleDateFormat curFormater = new SimpleDateFormat("dd/MM/yyyy");
         String formattedDate = curFormater.format(today);
         //Creating Partido instance

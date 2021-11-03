@@ -52,25 +52,19 @@
     <string name="txtDialogoFinalAfirmativo">Sí</string>
     <string name="txtDialogoFinalNegativo">No</string>
     <string name="title_activity_mejores_resultados">MejoresResultados</string>
-    <!-- Sync Preferences
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
-    </string>
-   <string name="attachment_summary_off">Only download attachments when manually requested</string>
--->
+
 <!--reiniciar juego-->
 
     <string name="ResetGameMessage">¿Quieres reiniciar el juego?</string>
-    <string name="save_game"> Guardar Partida </string>
-    <string name="saving_game"> ¿Quieres Guardar Partida? </string>
+    <string name="saveGameTitle"> Guardar Partida </string>
+    <string name="saveGameQuestion"> ¿Quieres Guardar Partida? </string>
 <!--recuperar partida-->
-    <string name="get_game"> Recuperar Partida </string>
-    <string name="getting_game">¿Quieres Recuperar Partida?  </string>
+    <string name="getGameTitle"> Recuperar Partida </string>
+    <string name="getGameQuestion">¿Quieres Recuperar Partida?  </string>
 <!--eliminar los datos-->
-    <string name="deletLista"> Eliminar  </string>
-    <string name="listadelete">¿Quieres Eliminar todos los resultados?  </string>
-    <string name="emptyfile">No hay ninguna partida guardada</string>
+    <string name="deletListaTitle"> Eliminar  </string>
+    <string name="deleteQuestion">¿Quieres Eliminar todos los resultados?  </string>
+    <string name="emptyFileMessage">No hay ninguna partida guardada</string>
 
     <string name="title_activity_bantumi_prefs">BantumiPrefs</string>
 </resources>

@@ -2,6 +2,9 @@ package es.upm.miw.bantumi;
 
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import es.upm.miw.bantumi.model.BantumiViewModel;
@@ -195,6 +198,7 @@ public class JuegoBantumi {
      */
     public String serializa() {
         StringBuilder gameState = new StringBuilder();
+  gameState.append((this.turnoActual() == Turno.turnoJ1) ? "1" : "2").append("\n");
         for (int i = 0; i < JuegoBantumi.NUM_POSICIONES; i++) {
             gameState.append(this.getSemillas(i)).append("\n");
         }
@@ -207,6 +211,8 @@ public class JuegoBantumi {
      * @param juegoSerializado cadena que representa el estado completo del juego
      */
     public void deserializa(List<String> juegoSerializado) {
+     this.setTurno((juegoSerializado.get(0).equals("1")) ? Turno.turnoJ1 : Turno.turnoJ2);
+        juegoSerializado.remove(0);
         for (int i = 0; i < JuegoBantumi.NUM_POSICIONES; i++) {
             this.setSemillas(i, Integer.parseInt(juegoSerializado.get(i)));
         }

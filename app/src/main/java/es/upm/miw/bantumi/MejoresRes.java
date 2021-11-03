@@ -58,8 +58,8 @@ public class MejoresRes extends AppCompatActivity {
         if (id == R.id.deleteItem) {
             // do something here
             builder
-                    .setTitle(R.string.deletLista)
-                    .setMessage(R.string.listadelete)
+                    .setTitle(R.string.deletListaTitle)
+                    .setMessage(R.string.deleteQuestion)
                     .setPositiveButton(
                             getString(R.string.txtDialogoFinalAfirmativo),
                             new DialogInterface.OnClickListener() {
